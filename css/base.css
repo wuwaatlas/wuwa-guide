@@ -1,0 +1,59 @@
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+:root {
+  --color-text: #fff;
+  --color-muted: rgba(255,255,255,.72);
+  --color-panel: rgba(255,255,255,.075);
+  --color-panel-border: rgba(255,255,255,.12);
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --page-max: 1100px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background:
+    radial-gradient(circle at top, rgba(120,130,160,.42), rgba(20,24,34,.88) 32%, #080b12 70%);
+  color: var(--color-text);
+  font-family: sans-serif;
+  margin: 0;
+  padding: 24px;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+input,
+select {
+  background: #222;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+input::placeholder { color: rgba(255,255,255,.45); }
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 120px;
+  cursor: pointer;
+}
+
+select option {
+  background: #1b1f2a;
+  color: #fff;
+}

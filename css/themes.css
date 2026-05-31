@@ -1,0 +1,81 @@
+@keyframes snowFloat {
+  from { transform: translateY(-10px); }
+  to { transform: translateY(20px); }
+}
+
+@keyframes linneGlow {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); opacity: .45; filter: blur(0); }
+  25% { transform: translateY(-6px) translateX(4px) rotate(1deg); opacity: .75; filter: blur(.5px); }
+  50% { transform: translateY(4px) translateX(-3px) rotate(-1deg); opacity: .55; filter: blur(1px); }
+  75% { transform: translateY(-3px) translateX(6px) rotate(.5deg); opacity: .85; filter: blur(.3px); }
+}
+
+@keyframes chisakiCut {
+  0%, 100% { transform: translateX(0) translateY(0) skewX(0deg); opacity: .45; }
+  35% { transform: translateX(8px) translateY(-4px) skewX(-4deg); opacity: .9; }
+  70% { transform: translateX(-6px) translateY(5px) skewX(3deg); opacity: .6; }
+}
+
+.character-detail-inner.snow {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,.20), transparent 18%),
+    radial-gradient(circle at 80% 30%, rgba(180,220,255,.18), transparent 22%),
+    radial-gradient(circle at 60% 80%, rgba(220,240,255,.10), transparent 16%),
+    linear-gradient(135deg, #101726 0%, #1b2638 30%, #31445f 65%, #586b8f 100%);
+}
+
+.character-detail-inner.snow::before {
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.9), transparent),
+    radial-gradient(2px 2px at 70% 20%, rgba(255,255,255,.8), transparent),
+    radial-gradient(3px 3px at 50% 70%, rgba(255,255,255,.7), transparent),
+    radial-gradient(2px 2px at 85% 60%, rgba(255,255,255,.6), transparent);
+  opacity: .5;
+  animation: snowFloat 12s linear infinite;
+}
+
+.character-detail-inner.linne {
+  background:
+    radial-gradient(circle at 18% 20%, rgba(120,255,220,.18), transparent 18%),
+    radial-gradient(circle at 78% 22%, rgba(190,120,255,.20), transparent 22%),
+    radial-gradient(circle at 82% 70%, rgba(90,255,210,.14), transparent 18%),
+    radial-gradient(circle at 40% 85%, rgba(255,80,220,.10), transparent 20%),
+    linear-gradient(135deg, #0a0d14 0%, #111827 22%, #1b2342 45%, #2f1d4e 72%, #133a46 100%);
+}
+
+.character-detail-inner.linne::before {
+  background-image:
+    radial-gradient(3px 3px at 18% 22%, rgba(120,255,220,.95), transparent),
+    radial-gradient(4px 4px at 76% 18%, rgba(210,140,255,.9), transparent),
+    radial-gradient(3px 3px at 85% 65%, rgba(255,120,220,.85), transparent),
+    radial-gradient(2px 2px at 42% 78%, rgba(120,220,255,.75), transparent),
+    linear-gradient(115deg, transparent 0%, rgba(120,255,220,.10) 35%, transparent 52%),
+    linear-gradient(-25deg, transparent 0%, rgba(255,120,255,.08) 45%, transparent 65%);
+  opacity: .9;
+  animation: linneGlow 8s ease-in-out infinite;
+}
+
+.character-detail-inner.linne .echo-skill-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(120,255,220,.45);
+  box-shadow: 0 0 12px rgba(120,255,220,.22);
+}
+
+.character-detail-inner.chisa {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,210,230,.18), transparent 18%),
+    radial-gradient(circle at 80% 25%, rgba(120,190,255,.18), transparent 22%),
+    radial-gradient(circle at 65% 75%, rgba(255,70,110,.14), transparent 18%),
+    linear-gradient(135deg, #111827 0%, #182a45 34%, #314f75 62%, #6d2435 100%);
+}
+
+.character-detail-inner.chisa::before {
+  background-image:
+    linear-gradient(115deg, transparent 0%, rgba(255,255,255,.22) 48%, transparent 50%),
+    linear-gradient(35deg, transparent 0%, rgba(255,70,110,.18) 42%, transparent 45%),
+    linear-gradient(-25deg, transparent 0%, rgba(120,190,255,.16) 58%, transparent 61%),
+    radial-gradient(3px 3px at 22% 32%, rgba(255,230,240,.9), transparent),
+    radial-gradient(2px 2px at 72% 22%, rgba(180,220,255,.85), transparent);
+  opacity: .85;
+  animation: chisakiCut 7s ease-in-out infinite;
+}

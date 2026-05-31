@@ -1,0 +1,42 @@
+.home-intro {
+  margin-top: 40px;
+  margin-bottom: 24px;
+  padding: 28px;
+  border-radius: 20px;
+}
+
+.home-intro h1 { margin: 0 0 10px; }
+.home-intro p { color: rgba(255,255,255,.75); }
+
+.beginner-section { margin-top: 24px; }
+
+.guide-card {
+  width: 100%;
+  max-width: 420px;
+  display: block;
+  text-align: left;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  color: #fff;
+  cursor: pointer;
+}
+
+.guide-card-title {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.guide-card-description,
+.guide-card-text {
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.side-info {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}

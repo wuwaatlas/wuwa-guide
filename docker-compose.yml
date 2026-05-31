@@ -1,0 +1,12 @@
+services:
+  wuwa-guide:
+    image: nginx:alpine
+    container_name: wuwa-guide
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - ./:/usr/share/nginx/html:ro
+
+    restart: unless-stopped
