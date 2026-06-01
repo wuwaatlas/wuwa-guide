@@ -54,6 +54,78 @@ window.statusGuide = {
   ]
 };
 
+window.echoSubStats = [
+  {
+    id: "hpPercent",
+    name: "HP%",
+    min: "6.4%",
+    max: "11.6%",
+    rolls: ["6.4%", "7.1%", "7.9%", "8.6%", "9.4%", "10.1%", "10.9%", "11.6%"]
+  },
+  {
+    id: "atkPercent",
+    name: "攻撃力%",
+    min: "6.4%",
+    max: "11.6%",
+    rolls: ["6.4%", "7.1%", "7.9%", "8.6%", "9.4%", "10.1%", "10.9%", "11.6%"]
+  },
+  {
+    id: "defPercent",
+    name: "防御力%",
+    min: "8.1%",
+    max: "14.7%",
+    rolls: ["8.1%", "9.0%", "10.0%", "10.9%", "11.8%", "12.8%", "13.6%", "14.7%"]
+  },
+  {
+    id: "critRate",
+    name: "クリティカル",
+    min: "6.3%",
+    max: "10.5%",
+    rolls: ["6.3%", "6.9%", "7.5%", "8.1%", "8.7%", "9.3%", "9.9%", "10.5%"]
+  },
+  {
+    id: "critDmg",
+    name: "クリティカルダメージ",
+    min: "12.6%",
+    max: "21.0%",
+    rolls: ["12.6%", "13.8%", "15.0%", "16.2%", "17.4%", "18.6%", "19.8%", "21.0%"]
+  },
+  {
+    id: "energy",
+    name: "共鳴効率",
+    min: "6.8%",
+    max: "12.4%",
+    rolls: ["6.8%", "7.6%", "8.4%", "9.2%", "10.0%", "10.8%", "11.6%", "12.4%"]
+  },
+  {
+    id: "normalDmg",
+    name: "通常攻撃ダメージ",
+    min: "6.4%",
+    max: "11.6%",
+    rolls: ["6.4%", "7.1%", "7.9%", "8.6%", "9.4%", "10.1%", "10.9%", "11.6%"]
+  },
+  {
+    id: "heavyDmg",
+    name: "重撃ダメージ",
+    min: "6.4%",
+    max: "11.6%",
+    rolls: ["6.4%", "7.1%", "7.9%", "8.6%", "9.4%", "10.1%", "10.9%", "11.6%"]
+  },
+  {
+    id: "skillDmg",
+    name: "共鳴スキルダメージ",
+    min: "6.4%",
+    max: "11.6%",
+    rolls: ["6.4%", "7.1%", "7.9%", "8.6%", "9.4%", "10.1%", "10.9%", "11.6%"]
+  },
+  {
+    id: "liberationDmg",
+    name: "共鳴解放ダメージ",
+    min: "6.4%",
+    max: "11.6%",
+    rolls: ["6.4%", "7.1%", "7.9%", "8.6%", "9.4%", "10.1%", "10.9%", "11.6%"]
+  }
+];
 
 window.echoSets = {
   wishesOfQuietSnowfall: {
@@ -157,8 +229,10 @@ window.characters = [
     echoSkill: "VoidborneConstruct",
     mainStats: {
       cost4: "クリティカルダメージ",
-      cost3: "凝縮ダメージ / 攻撃%",
-      cost1: "攻撃%"
+      cost3_1: "凝縮ダメージ",
+      cost3_2: "凝縮ダメージ or 攻撃%",
+      cost1_1: "攻撃%",
+      cost1_2: "攻撃%"
     },
     subStats: [
       "1：クリティカルダメージ",
@@ -167,7 +241,68 @@ window.characters = [
       "4：共鳴解放ダメージ",
       "5：攻撃力実数"
     ],
-    memo: "共鳴効率120%<br> クリティカル75%<br> クリティカルダメージ220%～<br> 攻撃力2000～"
+    parties: [
+      {
+        title: "おすすめ編成",
+
+        members: [
+          {
+            role: "アタッカー",
+            name: "緋雪",
+            image: "images/icon/hiyuki.webp"
+          },
+          {
+            role: "サブアタッカー",
+            name: "リンネー",
+            image: "images/icon/lynae.webp"
+          },
+          {
+            role: "サポーター",
+            name: "千咲",
+            image: "images/icon/chisa.webp"
+          }
+        ]
+      }
+    ],
+    weapons: [
+      {
+        rank: 1,
+        name: "灼霜",
+        image: "images/icon/syakuso.webp"
+      },
+      {
+        rank: 2,
+        name: "千古の湖水(旧恒常★5)",
+        image: "images/icon/senkonokosui.webp"
+      }
+    ],
+    rotation: [
+      {
+        character: "千咲",
+        icon: "images/icon/chisa.webp",
+        lightClick: "images/icon/rotation/chisaLightclick.webp",
+        eSkill: "images/icon/rotation/chisaE.webp",
+        rSkill: "images/icon/rotation/hiyukiR.webp",
+        qSkill: "",
+      },
+      {
+        character: "リンネー",
+        icon: "images/icon/lynae.webp",
+        lightClick: "",
+        eSkill: "",
+        rSkill: "",
+        qSkill: "",
+      },
+      {
+        character: "緋雪",
+        icon: "images/icon/hiyuki.webp",
+        lightClick: "",
+        eSkill: "",
+        rSkill: "",
+        qSkill: "",
+      }
+    ],
+    memo: "・共鳴効率120%<br> ・クリティカル75%<br> ・クリティカルダメージ220%～<br> ・攻撃力2000～"
   },
   {
     id: "Lynae",
@@ -182,18 +317,18 @@ window.characters = [
     echoSkill: "Hyvatia",
     mainStats: {
       cost4: "クリティカルダメージ or クリティカル",
-      cost3: "回折ダメージ",
-      cost3: "回折ダメージ",
-      cost1: "攻撃%",
-      cost1: "攻撃%"
+      cost3_1: "回折ダメージ",
+      cost3_2: "回折ダメージ",
+      cost1_1: "攻撃%",
+      cost1_2: "攻撃%"
     },
     subStats: [
-      "1:クリティカル/クリティカルダメージ",
-      "2:攻撃力％",
-      "3:通常攻撃%",
-      "4:攻撃力実数"
+      "1：クリティカル/クリティカルダメージ",
+      "2：攻撃力％",
+      "3：通常攻撃%",
+      "4：攻撃力実数"
     ],
-    memo: "共鳴効率125%～<br> クリティカル75%～<br> クリティカルダメージ200%～<br> 攻撃力2000～"
+    memo: "・共鳴効率125%～<br> ・クリティカル75%～<br> ・クリティカルダメージ200%～<br> ・攻撃力2000～"
   },
   {
     id: "chisa",
@@ -208,17 +343,17 @@ window.characters = [
     echoSkill: "FallacyofNoReturn",
     mainStats: {
       cost4: "クリティカルダメージ or クリティカル",
-      cost3: "消滅ダメージ",
-      cost3: "消滅ダメージ",
-      cost1: "攻撃%",
-      cost1: "攻撃%"
+      cost3_1: "消滅ダメージ",
+      cost3_2: "消滅ダメージ",
+      cost1_1: "攻撃%",
+      cost1_2: "攻撃%"
     },
     subStats: [
-      "1:クリティカル/クリティカルダメージ",
-      "2:攻撃力％",
-      "3:共鳴解放ダメージ",
-      "4:攻撃力実数"
+      "1：クリティカル/クリティカルダメージ",
+      "2：攻撃力％",
+      "3：共鳴解放ダメージ",
+      "4：攻撃力実数"
     ],
-    memo: "共鳴効率125%～<br> クリティカル74%～<br> クリティカルダメージ200%～<br> 攻撃力1800～"
+    memo: "・共鳴効率125%～<br> ・クリティカル74%～<br> ・クリティカルダメージ200%～<br> ・攻撃力1800～"
   }
 ];

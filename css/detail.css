@@ -44,8 +44,10 @@
 .detail-visual { position: relative; }
 
 .detail-character-image {
-  width: 360px;
-  height: 640px;
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  max-height: 640px;
   object-fit: cover;
   border-radius: 20px;
   display: block;
@@ -73,7 +75,7 @@
 }
 
 .echo-detail-panel {
-  width: 100%;
+  width: fit-content;
   max-width: 820px;
   margin-top: 18px;
   padding: 16px;
@@ -111,17 +113,158 @@
 
 .detail-layout {
   display: grid;
-  grid-template-columns: 380px 340px 740px;
+  grid-template-columns:
+    minmax(260px, 360px)
+    minmax(280px, 340px)
+    minmax(620px, 1fr);
   gap: 48px;
   align-items: start;
 }
 
 .detail-side-panels {
-  width: 740px;
-  min-width: 740px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.echo-set-detail-panel {
+  max-width: 900px;
 }
 
 .echo-set-detail-panel.is-empty {
   visibility: hidden;
   pointer-events: none;
+}
+
+.stat-list {
+  margin-top: 6px;
+  line-height: 1.45;
+  font-size: 0.93rem;
+  color: rgba(255,255,255,0.92);
+}
+
+.stat-list div {
+  white-space: nowrap;
+}
+
+.stat-list span {
+  font-weight: 700;
+}
+
+.stat-list strong {
+  font-weight: 600;
+}
+
+@media (max-width: 1350px) {
+  .detail-layout {
+    grid-template-columns:
+      minmax(260px, 360px)
+      minmax(280px, 1fr);
+  }
+
+  .detail-side-panels {
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+  }
+}
+
+.stat-list-box {
+  display: grid;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.stat-list-box div {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 4px;
+  align-items: start;
+  line-height: 1.15;
+}
+
+.stat-list-box span {
+  color: #9fd0ff;
+  font-weight: 600;
+  font-size: 0.82rem;
+  opacity: 0.9;
+}
+
+.stat-list-box strong {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.party-panel {
+  margin-top: 0;
+}
+
+.party-member-list {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.party-member-card {
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.party-member-image {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+
+.party-member-role {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #9fd0ff;
+}
+
+.party-member-name {
+  display: block;
+  color: #fff;
+  font-size: 15px;
+}
+
+.party-note {
+  margin-top: 12px !important;
+  color: rgba(255,255,255,.75);
+}
+
+.party-panel,
+.weapon-panel {
+  margin-top: 0;
+  align-self: stretch;
+}
+
+.weapon-card {
+  text-align: center;
+}
+
+.weapon-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  margin-top: 12px;
+}
+
+.weapon-card img {
+  width: 90px;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
 }

@@ -40,3 +40,14 @@
   gap: 12px;
   align-content: start;
 }
+
+.beginner-card-list {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.beginner-card-list .guide-card {
+  flex: 1;
+  min-width: 280px;
+}

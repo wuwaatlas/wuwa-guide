@@ -2,7 +2,9 @@ const app = document.getElementById("app");
 
 const PAGE = {
   HOME: "home",
-  GUIDE: "guide",
+  BEGINNER_GUIDE: "beginnerGuide",
+  STATUS_GUIDE: "statusGuide",
+  ECHO_GUIDE: "echoGuide",
   DETAIL: "characterDetail"
 };
 
@@ -13,7 +15,8 @@ const state = {
   roleFilter: "all",
   selectedStatusIds: [],
   selectedEchoSetId: null,
-  selectedEchoSkillId: null
+  selectedEchoSkillId: null,
+  selectedEchoSubStatId: null,
 };
 
 const data = {
@@ -21,7 +24,8 @@ const data = {
   statusGuide: () => window.statusGuide,
   echoSet: id => window.echoSets?.[id] ?? null,
   echoSkill: id => window.echoSkills?.[id] ?? null,
-  character: id => (window.characters ?? []).find(character => character.id === id) ?? null
+  character: id => (window.characters ?? []).find(character => character.id === id) ?? null,
+  echoSubStats: () => window.echoSubStats ?? [],
 };
 
 function navigate(page, patch = {}) {
@@ -100,20 +104,29 @@ function getFilteredCharacters() {
 function render() {
   app.innerHTML = "";
 
-  if (state.currentPage === PAGE.GUIDE) {
+  if (state.currentPage === PAGE.DETAIL) {
+    app.appendChild(renderCharacterDetail(data.character(state.selectedCharacterId)));
+    return;
+  }
+
+  if (state.currentPage === PAGE.BEGINNER_GUIDE) {
+    app.appendChild(renderBeginnerGuidePage());
+    return;
+  }
+
+  if (state.currentPage === PAGE.STATUS_GUIDE) {
     app.appendChild(renderStatusGuide());
     return;
   }
 
-  if (state.currentPage === PAGE.DETAIL) {
-    app.appendChild(renderCharacterDetail(data.character(state.selectedCharacterId)));
+  if (state.currentPage === PAGE.ECHO_GUIDE) {
+    app.appendChild(renderEchoGuide());
     return;
   }
 
   app.append(
     renderHomeIntro(),
     renderHeader(),
-    renderBeginnerCards(),
     renderHomeLayout()
   );
 }
@@ -176,10 +189,16 @@ function renderRoleOptions() {
 function renderBeginnerCards() {
   return createElement("section", "beginner-section", `
     <h2>初心者向け</h2>
-    <button class="guide-card" id="guideCard" type="button">
+    <div class="beginner-card-list">
+    <button class="guide-card" data-page="${PAGE.STATUS_GUIDE}" type="button">
       <span class="guide-card-title">ステータスのみかた</span>
       <span class="guide-card-description">基本的なステータスの意味を解説</span>
     </button>
+    <button class="guide-card" data-page="${PAGE.ECHO_GUIDE}" type="button">
+      <span class="guide-card-title">音骸ステータスのみかた / 音骸厳選のコツ</span>
+      <span class="guide-card-description">音骸サブステータスや厳選の考え方を解説</span>
+    </button>
+    </div>
   `);
 }
 
@@ -195,15 +214,23 @@ function renderHomeLayout() {
 
 function renderSideInfo() {
   return createElement("aside", "side-info", `
-    <h2>おすすめ</h2>
-    <div class="info-card">
-      <h3>まず見るべき項目</h3>
-      <p>クリティカル・クリティカルダメージ・攻撃力・共鳴効率を優先。</p>
-    </div>
-    <div class="info-card">
-      <h3>更新予定</h3>
-      <p>音骸スキル、推奨セット、育成素材数を順次追加予定。</p>
-    </div>
+    <h2>初心者向け</h2>
+
+    <button class="guide-card" data-page="${PAGE.STATUS_GUIDE}" type="button">
+      <span class="guide-card-title">ステータスのみかた</span>
+      <span class="guide-card-description">
+        基本的なステータスの意味を解説
+      </span>
+    </button>
+
+    <button class="guide-card" data-page="${PAGE.ECHO_GUIDE}" type="button">
+      <span class="guide-card-title">
+        音骸ステータスのみかた / 音骸厳選のコツ
+      </span>
+      <span class="guide-card-description">
+        音骸サブステータスや厳選の考え方を解説
+      </span>
+    </button>
   `);
 }
 
@@ -290,21 +317,27 @@ function renderCharacterDetail(character) {
             <div class="echo-skill-box">${renderEchoSkill(character)}</div>
 
             <h3>メインステータス</h3>
-            <ul>
-              <li>4コスト：${character.mainStats.cost4}</li>
-              <li>3コスト：${character.mainStats.cost3}</li>
-              <li>1コスト：${character.mainStats.cost1}</li>
-            </ul>
+            <div class="stat-list stat-list-box">
+              <div><span>4コスト</span><strong>${character.mainStats.cost4}</strong></div>
+              <div><span>3コスト</span><strong>${character.mainStats.cost3_1}</strong></div>
+              <div><span>3コスト</span><strong>${character.mainStats.cost3_2}</strong></div>
+              <div><span>1コスト</span><strong>${character.mainStats.cost1_1}</strong></div>
+              <div><span>1コスト</span><strong>${character.mainStats.cost1_2}</strong></div>
+            </div>
 
             <h3>サブステータス優先度</h3>
-            <p>${character.subStats.length ? character.subStats.join("<br>") : "-"}</p>
-
+            <div class="stat-list">
+              ${character.subStats.length
+                ? character.subStats.map(stat => `<div>${stat}</div>`).join("")
+                : "-"
+              }
+            </div>
             <h3>目標ステータス</h3>
             <p>${character.memo ?? "-"}</p>
           </div>
         </div>
 
-        <div class="detail-side-panels">${renderDetailSidePanel()}</div>
+        <div class="detail-side-panels">${renderDetailSidePanel(character)}</div>
       </div>
     </div>
   `;
@@ -312,14 +345,87 @@ function renderCharacterDetail(character) {
   return detail;
 }
 
-function renderDetailSidePanel() {
+function renderDetailSidePanel(character) {
   if (state.selectedEchoSkillId) {
     return renderEchoSkillDetailPanel();
   }
   if (state.selectedEchoSetId) {
     return renderEchoSetDetailPanel();
   }
-  return `<aside class="echo-set-detail-panel is-empty"></aside>`;
+  return `
+    ${renderPartyPanel(character)}
+    ${renderWeaponPanel(character)}
+  `
+}
+
+function renderPartyPanel(character) {
+  const parties = character?.parties ?? [];
+
+  if (!parties.length) {
+    return `
+      <aside class="echo-detail-panel">
+        <h3>おすすめパーティー</h3>
+        <p>未設定</p>
+      </aside>
+    `;
+  }
+
+  return parties.map(party => `
+    <aside class="echo-detail-panel party-panel">
+      <h3>${party.title}</h3>
+
+      <div class="party-member-list">
+        ${party.members.map(member => `
+          <div class="party-member-card">
+            <img
+              class="party-member-image"
+              src="${member.image}"
+              alt="${member.name}"
+            >
+
+            <div>
+              <span class="party-member-role">${member.role}</span>
+              <strong class="party-member-name">${member.name}</strong>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+
+      ${party.note ? `<p class="party-note">${party.note}</p>` : ""}
+    </aside>
+  `).join("");
+}
+
+function renderWeaponPanel(character) {
+  const weapons = character?.weapons ?? [];
+
+  if (!weapons.length) {
+    return `
+      <aside class="echo-detail-panel weapon-panel">
+        <h3>おすすめ武器</h3>
+        <p>未設定</p>
+      </aside>
+    `;
+  }
+
+  return `
+    <aside class="echo-detail-panel weapon-panel">
+      <h3>おすすめ武器</h3>
+
+      <div class="weapon-list">
+        ${weapons.map(weapon => `
+          <div class="weapon-card">
+            <span class="weapon-rank">${weapon.rank}</span>
+            <img class="weapon-image" src="${weapon.image}" alt="${weapon.name}">
+            <div>
+              <strong>${weapon.name}</strong>
+              ${weapon.note ? `<p>${weapon.note}</p>` : ""}
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </aside>
+  `;
 }
 
 function renderEchoSetDetailPanel() {
@@ -354,40 +460,200 @@ function renderEchoSkillDetailPanel() {
   `;
 }
 
-function renderStatusGuide() {
+function renderStatusGuideContent() {
   const guide = data.statusGuide();
-  const section = createElement("section", "status-guide", `
+
+  return `
+    <section class="beginner-guide-block status-guide">
+      <h2>ステータスのみかた</h2>
+      <p class="guide-lead">画像内のステータス名をクリックすると説明が出ます。</p>
+
+      <div class="status-guide-layout">
+        <div class="guide-toolbar">
+          <button id="showAllButton" type="button">すべて表示</button>
+          <button id="hideAllButton" type="button">すべて非表示</button>
+        </div>
+
+        <div class="guide-image-wrapper">
+          <img class="guide-image" src="${guide.image}" alt="ステータス画面">
+
+          <svg class="guide-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+            ${guide.hitAreas.map(area => `
+              <rect
+                class="guide-hit-area"
+                data-stat-id="${area.statId}"
+                x="${area.x}"
+                y="${area.y}"
+                width="${area.width}"
+                height="${area.height}"
+              />
+            `).join("")}
+          </svg>
+
+          ${renderStatusDescriptions()}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderEchoGuideContent() {
+  return `
+    <section class="beginner-guide-block echo-guide-page">
+      <h2>音骸ステータスのみかた / 音骸厳選のコツ</h2>
+
+      <p class="guide-lead">
+        下図のように音骸選択時、そのキャラの有効のサブステータスが強調表示される
+      </p>
+
+      <img
+        class="echo-guide-image"
+        src="images/status/echoguide.png"
+        alt="音骸サブステータスの見方"
+      >
+
+      <div class="echo-guide-table-layout">
+        ${renderEchoSubStatSimpleTable()}
+        ${renderEchoSubStatDetailTable()}
+      </div>
+    </section>
+  `;
+}
+function renderBeginnerGuidePage() {
+  return createElement("section", "beginner-guide-page", `
     <button id="backButton" class="guide-back-button">← 戻る</button>
 
-    <h2>初心者向け：ステータスの見方</h2>
-    <p class="guide-lead">画像内のステータス名をクリックすると説明が出ます。</p>
+    <h2>初心者ガイド</h2>
 
-    <div class="status-guide-layout">
-      <div class="guide-toolbar">
-        <button id="showAllButton" type="button">すべて表示</button>
-        <button id="hideAllButton" type="button">すべて非表示</button>
-      </div>
-
-      <div class="guide-image-wrapper">
-        <img class="guide-image" src="${guide.image}" alt="ステータス画面">
-        <svg class="guide-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-          ${guide.hitAreas.map(area => `
-            <rect
-              class="guide-hit-area ${state.selectedStatusIds.includes(area.statId) ? "active" : ""}"
-              data-stat-id="${area.statId}"
-              x="${area.x}"
-              y="${area.y}"
-              width="${area.width}"
-              height="${area.height}"
-            />
-          `).join("")}
-        </svg>
-        ${renderStatusDescriptions()}
-      </div>
-    </div>
+    ${renderStatusGuideContent()}
+    ${renderEchoGuideContent()}
   `);
+}
 
-  return section;
+function renderStatusGuide() {
+  return createElement("section", "status-guide", `
+    <button id="backButton" class="guide-back-button">← 戻る</button>
+    ${renderStatusGuideContent()}
+  `);
+}
+
+function renderEchoGuide() {
+  return createElement("section", "echo-guide-page", `
+    <button id="backButton" class="guide-back-button">← 戻る</button>
+    ${renderEchoGuideContent()}
+  `);
+}
+
+function renderEchoSubStatSimpleTable() {
+  const subStats = data.echoSubStats();
+
+  return `
+    <section class="echo-simple-table-section">
+      <h3>音骸サブステータスの数値一覧</h3>
+
+      <div class="echo-simple-table">
+        <div class="echo-simple-table-header">
+          <span>種類</span>
+          <span>最小</span>
+          <span>最大</span>
+        </div>
+
+        ${subStats.map(stat => `
+          <button
+            class="echo-simple-table-row ${state.selectedEchoSubStatId === stat.id ? "is-selected" : ""}"
+            data-echo-substat-id="${stat.id}"
+            type="button"
+          >
+            <span>${stat.name}</span>
+            <span>${stat.min}</span>
+            <span>${stat.max}</span>
+          </button>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderEchoSubStatDetailTable() {
+  const subStats = data.echoSubStats();
+
+  const selectedStat =
+    subStats.find(stat => stat.id === state.selectedEchoSubStatId);
+
+  if (!selectedStat) {
+    return `
+      <section class="echo-detail-table-section">
+        <div class="echo-selected-roll-table">
+          <h3>サブステータスを選択してください</h3>
+          <p class="guide-lead">左の表から項目をクリックすると、ロール値が表示されます。</p>
+        </div>
+
+        <details class="echo-detail-table-details">
+          <summary>全ロール値を見る</summary>
+          ${renderAllEchoSubStatRollTable(subStats, null)}
+        </details>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="echo-detail-table-section">
+      <div class="echo-selected-roll-table">
+        <h3>${selectedStat.name} のロール値</h3>
+
+        <table class="echo-detail-table">
+          <thead>
+            <tr>
+              <th>ステータス</th>
+              ${selectedStat.rolls.map((_, index) => `<th>${index + 1}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>${selectedStat.name}</td>
+              ${selectedStat.rolls.map(value => `<td>${value}</td>`).join("")}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <details class="echo-detail-table-details">
+        <summary>全ロール値を見る</summary>
+        ${renderAllEchoSubStatRollTable(subStats, selectedStat.id)}
+      </details>
+    </section>
+  `;
+}
+
+function renderAllEchoSubStatRollTable(subStats, selectedId) {
+  return `
+    <div class="echo-detail-table-wrapper">
+      <table class="echo-detail-table">
+        <thead>
+          <tr>
+            <th>ステータス</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>8</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          ${subStats.map(stat => `
+            <tr class="${stat.id === selectedId ? "is-selected" : ""}">
+              <td>${stat.name}</td>
+              ${stat.rolls.map(value => `<td>${value}</td>`).join("")}
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
 function renderStatusDescriptions() {
@@ -425,8 +691,8 @@ function bindEvents() {
   document.addEventListener("click", event => {
     const target = event.target;
 
-    if (target.closest("#guideButton") || target.closest("#guideCard")) {
-      navigate(PAGE.GUIDE);
+    if (target.closest("#guideButton")) {
+      navigate(PAGE.BEGINNER_GUIDE);
       return;
     }
 
@@ -459,6 +725,19 @@ function bindEvents() {
     if (target.id === "hideAllButton") {
       state.selectedStatusIds = [];
       render();
+    }
+
+    if (target.closest("[data-page]")) {
+      const button = target.closest("[data-page]");
+      state.currentPage = button.dataset.page;
+      render();
+    }
+    const subStatButton = target.closest("[data-echo-substat-id]");
+    if (subStatButton) {
+      const clickedId = subStatButton.dataset.echoSubstatId;
+      state.selectedEchoSubStatId = state.selectedEchoSubStatId === clickedId ? null : clickedId;
+      render();
+      return;
     }
   });
 }
